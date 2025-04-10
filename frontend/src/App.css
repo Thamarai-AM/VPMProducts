@@ -33,3 +33,7 @@
   visibility: visible;
   opacity: 1;
 }
+h2{
+  text-transform: uppercase !important;
+  text-align: center;
+}

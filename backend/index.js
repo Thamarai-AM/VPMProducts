@@ -26,8 +26,7 @@
   
   // 📌 Route: Upload & Add Product with Base64 Image
   app.post('/product', (req, res) => {
-    const { name, description, old_price, new_price, category, available, weight, image } = req.body;
-
+    const { name, description, old_price, new_price, category, available, weight, image,displayHome } = req.body;
     // Check if product name already exists
     const checkQuery = 'SELECT COUNT(*) AS count FROM products WHERE name = ?';
     
@@ -39,10 +38,10 @@
       }
   
       // Insert product if it doesn't exist
-      const insertQuery = `INSERT INTO products (name, description, old_price, new_price, category, available, weight, image) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+      const insertQuery = `INSERT INTO products (name, description, old_price, new_price, category, available, weight, image,displayHome) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)`;
       
-      db.query(insertQuery, [name, description, old_price, new_price, category, available, weight, image], (err, result) => {
+      db.query(insertQuery, [name, description, old_price, new_price, category, available, weight, image,displayHome], (err, result) => {
         if (err) return res.status(500).json({ error: "Failed to add product" });
   
         res.status(201).json({ message: "Product added successfully!" });
@@ -71,22 +70,8 @@ app.get("/products", (req, res) => {
     });
   });
   
-  // app.get("/product/:id", (req, res) => {
-  //   console.log(req.params)
-
-  //   const { id } = req.params;
-  //   const query = "SELECT * FROM products WHERE id = ?";
-  //   db.query(query, [id], (err, result) => {
-  //     if (err) return res.status(500).send(err);
-  //     console.log(result)
-
-  //     res.json(result[0]); // Send product details
-  //   });
-  // });
-  
   app.get("/product/:id", (req, res) => {
     const { id } = req.params;
-    console.log("Product ID:", id); // ✅ Debugging
   
     const query = "SELECT * FROM products WHERE id = ?";
     db.query(query, [id], (err, result) => {
@@ -94,7 +79,6 @@ app.get("/products", (req, res) => {
         console.error("Database error:", err);
         return res.status(500).json({ error: "Database error" });
       }
-  
   
       if (result.length === 0) {
         return res.status(404).json({ error: "Product not found" });
@@ -106,13 +90,13 @@ app.get("/products", (req, res) => {
    
   // 📌 Route: Update Product with Base64 Image
   app.put('/product/:id', (req, res) => {
-      const { name, description, old_price, new_price, category, available, weight, image } = req.body;
+      const { name, description, old_price, new_price, category, available, weight, image,displayHome } = req.body;
       const { id } = req.params;
   
       let query = `UPDATE products SET 
                       name = ?, description = ?, old_price = ?, new_price = ?, 
-                      category = ?, available = ?, weight = ?`;
-      const values = [name, description, old_price, new_price, category, available, weight];
+                      category = ?, available = ?, weight = ?,displayHome=?`;
+      const values = [name, description, old_price, new_price, category, available, weight,displayHome];
   
       if (image) {
           query += `, image = ?`;
@@ -236,7 +220,6 @@ app.get("/category", (req, res) => {
 //get cart values
 app.get("/cart/:user_id", (req, res) => {
     const { user_id } = req.params;
-    console.log(user_id)
     const query = "SELECT * FROM cart WHERE user_id = ?";
     db.query(query, [user_id], (err, result) => {
       if (err) return res.status(500).send(err);
@@ -355,7 +338,6 @@ app.delete("/cart/remove", (req, res) => {
 //get wishlist values
 app.get("/wishlist/:user_id", (req, res) => {
   const { user_id } = req.params;
-  console.log(user_id)
   const query = "SELECT * FROM wishlist WHERE user_id = ?";
   db.query(query, [user_id], (err, result) => {
     if (err) return res.status(500).send(err);
@@ -363,22 +345,6 @@ app.get("/wishlist/:user_id", (req, res) => {
   });
 });
 
-
-// Add to wishlist
-// app.post("/wishlist",  (req, res) => {
-//   const { user_id, product_id, new_price,name, image } = req.body;
-//   try {
-//      db.query(
-//       //   const query = "INSERT IGNORE INTO wishlisttable (user_id, product_id) VALUES (?, ?)";
-
-//       "INSERT IGNORE INTO wishlist (user_id, product_id, new_price,name,image) VALUES (?, ?, ?, ?,? ) ",
-//       [user_id, product_id,new_price, name, image]
-//     );
-//     res.json({ message: "Product added to wishlist!" });
-//   } catch (error) {
-//     res.status(500).json({ error: "Database error" });
-//   }
-// });
 
 
 app.post("/wishlist", (req, res) => {
@@ -427,43 +393,6 @@ db.query("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", [user_id, 
 });
 });
 
-// // **🔹 Add Product to Wishlist**
-// app.post("/wishlist", (req, res) => {
-//   const { user_id, product_id } = req.body;
-
-//   const query = "INSERT IGNORE INTO wishlisttable (user_id, product_id) VALUES (?, ?)";
-//   db.query(query, [user_id, product_id], (err, result) => {
-//     if (err) return res.status(500).send(err.message);
-//     res.json({ message: "Product added to wishlist" });
-//   });
-// });
-
-// // **🔹 Remove Product from Wishlist**
-// app.delete("/wishlist", (req, res) => {
-//   const { user_id, product_id } = req.body;
-
-//   const query = "DELETE FROM wishlisttable WHERE user_id = ? AND product_id = ?";
-//   db.query(query, [user_id, product_id], (err, result) => {
-//     if (err) return res.status(500).send(err.message);
-//     res.json({ message: "Product removed from wishlist" });
-//   });
-// });
-
-// // **🔹 Get Wishlist Items for User**
-// app.get("/wishlist/:user_id", (req, res) => {
-//   const { user_id } = req.params;
-
-//   const query = `
-//     SELECT products.* FROM products
-//     JOIN wishlisttable ON products.id = wishlisttable.product_id
-//     WHERE wishlisttable.user_id = ?
-//   `;
-//   db.query(query, [user_id], (err, result) => {
-//     if (err) return res.status(500).send(err.message);
-//     res.json(result);
-//   });
-// });
-
 
 
 
@@ -493,7 +422,6 @@ db.query("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", [user_id, 
   
   // Login
   app.post("/login", (req, res) => {
-    console.log("login",req.body)
     const { email, password } = req.body;
   
     if (!email || !password) {
@@ -519,7 +447,6 @@ db.query("DELETE FROM wishlist WHERE user_id = ? AND product_id = ?", [user_id, 
       }
   
       const token = jwt.sign({ id: user.id,email:user.email,username:user.username }, JWT_SECRET);
-      console.log(token);
       res.status(200).json({ username: user.username, token,id: user.id });
 
       // res.json({ message: "Login successful", token });
@@ -577,16 +504,23 @@ app.get("/products/category/:categoryName", (req, res) => {
   
 
 
+  
+// API to get products by category and displayHome
+app.get("/displayHome/Cat", (req, res) => {
 
+  const query = "SELECT * FROM products WHERE displayHome = 1";
 
-
-
-
-
-
-
-
-
+  db.query(query,  (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database error" });
+    }
+    
+    if (results.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+    res.json(results);
+  });
+});
 
 
 

@@ -54,3 +54,14 @@
     margin: 0;
     padding: 20px;
 }
+.sideULLeft .cartGrid{
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 20px 10px;
+}
+.sideULLeft h1,.sideULLeft .total{
+    font-size: 20px;
+    font-weight: bold;
+}
+.sideULLeft .cartDetailsList,.sideULLeft .cartDetails{gap:0}

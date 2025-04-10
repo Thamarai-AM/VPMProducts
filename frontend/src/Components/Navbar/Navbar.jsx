@@ -14,6 +14,13 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   
   const userNameValue = localStorage.getItem("userNameValue");
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      console.log("Searching for:", searchTerm);
+      localStorage.setItem("searchData", searchTerm);
+      window.location.replace(`/search`);
+    }
+  };
 
   const handleSearch = () => {
     window.location.replace(`/search`);
@@ -31,7 +38,7 @@ const Navbar = () => {
         <div className="container">
             <div className='row padd10'>
                 <div className='col-md-3'><img src={logo} alt="Logo" className="logo-img" /></div>
-                <div className="col-md-6 searchDiv">
+                <div className="col-md-5 searchDiv">
                   <div className="form-floating mb">
                     {/* Search Bar */}
                     <input
@@ -41,13 +48,15 @@ const Navbar = () => {
                       placeholder="Search for products..."
                       className="form-control searchInput"
                       id='globalSearch'
+                      onKeyUp={handleKeyUp} 
+
                     />
                     <label htmlFor="globalSearch" className='searchLabel'>Search for products...</label></div>
 
                     <button onClick={handleSearch} className='searchButton'><img src={search} alt="" /></button>
 
                 </div>
-                <div className='col-md-3 signin'>
+                <div className='col-md-4 signin'>
                     <div className='row'>
                         <div className='col-md-6'>
                             <div className="row align-items-center">
@@ -64,7 +73,7 @@ const Navbar = () => {
                                         <li><Link to='/wishlist' className="dropdown-item">Wishlist</Link></li>
                                         <li><a className="dropdown-item" href="#">Another action</a></li>
                                         <li><hr className="dropdown-divider" /></li>
-                                        <li><button className="dropdown-logout" onClick={()=>{localStorage.removeItem("token");window.location.replace("/")}}>Logout</button></li>
+                                        <li><button className="dropdown-logout" onClick={()=>{localStorage.removeItem("token");localStorage.removeItem("userNameValue");localStorage.removeItem("token");window.location.replace("/")}}>Logout</button></li>
                                       </ul>
                                     </div>
                                     </>

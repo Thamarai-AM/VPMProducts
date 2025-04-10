@@ -308,6 +308,7 @@ const fetchCart = async (profileID) => {
       // setUserNameValue(res.data.username)
       dispatch({ type: "LOGIN", payload: res.data });
       fetchCart(res.data.id);
+      
 
     } catch (error) {
       console.error("Error logging in:", error);

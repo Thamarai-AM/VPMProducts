@@ -4,6 +4,8 @@ import './CSS/ShopCategory.css'
 import { Link } from 'react-router-dom'
 import grid_icon from '../Components/Assets/grid.png'
 import list_icon from '../Components/Assets/list.png'
+import right_arrow from '../Components/Assets/right-arrow.png'
+
 const ShopCategory = (props) => {
     const [all_product_category, setAllProductCategory] = useState([]);
     let categoryName =props.banner;
@@ -64,7 +66,11 @@ const ShopCategory = (props) => {
     <div>
         <div className="container text-center">
             <div className="row">
-                {props.banner}
+                
+                <ul className="breadcrumb">
+                                <li><Link to={`/`}>HOME</Link><img src={right_arrow} alt="" /></li>
+                                <li><Link to={`/${props.banner}`}>{props.banner}</Link></li>
+                        </ul>
             </div>
 
 

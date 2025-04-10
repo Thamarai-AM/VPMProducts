@@ -1,8 +1,10 @@
 import React,{useState} from 'react'
 import { useCart } from "../ContextAPIs/CartContext";
 import './CSS/LoginSignup.css'
+import { useNavigate } from "react-router-dom";
 
 const LoginSignup = () => {
+  const navigate = useNavigate(); 
   const { login,signup } = useCart();
   const [state,setState] = useState("Login");
   const [formData,setFormData] = useState({
@@ -13,9 +15,13 @@ const LoginSignup = () => {
 
   const handleLogin = async (e) => {
     await login(formData);
+    navigate("/", { replace: true }); 
+    window.location.reload();
   };
   const handleSignup = async (e) => {
     await signup(formData);
+    navigate("/", { replace: true }); 
+    window.location.reload();
   };
  
   const changeHandler = (e)=>{

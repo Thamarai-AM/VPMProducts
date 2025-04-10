@@ -19,10 +19,9 @@ const AddProduct = () => {
     weight: "",
     image: ""
   });
-  // const [suggestions, setSuggestions] = useState([]);
+  const [selectedValue, setSelectedValue] = useState(1); // Default selection is 1
+
   const [error, setError] = useState("");
-  // let [categoryData, setCategoryData] = useState([]); 
-  // let [category, setCategory] = useState(); 
 
   const [categories, setCategories] = useState([]);
 
@@ -52,25 +51,11 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
     setError(""); // Reset error on new input
+    console.log(selectedValue)
+    setSelectedValue(Number(e.target.value)); // Convert string to number
 
-    // if (name === "name" && value.length > 1) {
-    //   try {
-    //     const response = await axios.get(`http://localhost:5000/search-product-name/${value}`);
-    //     setSuggestions(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching product names:", error);
-    //   }
-    // } else {
-    //   setSuggestions([]);
-    // }
   };
 
-  // const handleSuggestionClick = (name) => {
-  //   setProduct({ ...product, name });
-  //   setSuggestions([]); // Clear suggestions after selection
-  //   setError("Product name already exists! Choose a different name.");
-
-  // };
 
   
 
@@ -125,15 +110,7 @@ const AddProduct = () => {
             <input required value={product.name} onChange={changeHandler} type="text" name='name' className="form-control"/>
             <label>Name of the Product</label>
             {error && <p style={{ color: "red" }}>{error}</p>}
-            {/* {suggestions.length > 0 && (
-              <ul className="search-result">
-                {suggestions.map((suggestion, index) => (
-                  <li key={index} onClick={() => handleSuggestionClick(suggestion)} >
-                    {suggestion}
-                  </li>
-                ))}
-              </ul>
-            )} */}
+          
 
           </div>
         </div>
@@ -148,7 +125,7 @@ const AddProduct = () => {
           </div>
         </div>
         <div className="row">
-          <div className="form-floating mb-3">
+          <div className="form-floating mb-3 col">
             <select name="category" value={product.category} onChange={changeHandler} className="form-select" required>
               <option value="">Select Category</option>
               {categories.map((cat) => (
@@ -158,6 +135,33 @@ const AddProduct = () => {
               ))}
             </select>
             <label >Select Category Type</label>
+          </div>
+          <div className="form-floating mb-3 col">
+            <div>
+          <p>Choose an Option to display in Home Page: </p>
+
+              <label>
+                <input
+                  type="radio"
+                  name="displayHome"
+                  value={1}
+                  checked={selectedValue === 1}
+                  onChange={changeHandler}
+                />
+                Yes
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  name="displayHome"
+                  value={0}
+                  checked={selectedValue === 0}
+                  onChange={changeHandler}
+                />
+                No 
+              </label>
+              </div>
           </div>
         </div>
 
